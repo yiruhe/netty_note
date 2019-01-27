@@ -1,0 +1,87 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+    }
+}
+
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'com.google.protobuf'
+
+group 'com.netty'
+version '1.0-SNAPSHOT'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.32.Final'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.6.1'
+    compile group: 'com.google.protobuf', name: 'protobuf-java-util', version: '3.6.1'
+    // https://mvnrepository.com/artifact/org.apache.thrift/libthrift
+    compile group: 'org.apache.thrift', name: 'libthrift', version: '0.11.0'
+
+    compile 'io.grpc:grpc-netty-shaded:1.17.1'
+    compile 'io.grpc:grpc-protobuf:1.17.1'
+    compile 'io.grpc:grpc-stub:1.17.1'
+
+
+
+
+
+}
+
+
+
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.5.1-1"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.17.1'
+        }
+    }
+    generateProtoTasks.generatedFilesBaseDir = 'src'
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+
+
+
+sourceSets {
+    main {
+        proto {
+            // In addition to the default 'src/main/proto'
+            srcDir 'src/main/grpc'
+            srcDir 'src/main/protocolbuffers'
+            // In addition to the default '**/*.proto' (use with caution).
+            // Using an extension other than 'proto' is NOT recommended,
+            // because when proto files are published along with class files, we can
+            // only tell the type of a file from its extension.
+            include '**/*.protodevel'
+        }
+
+    }
+}

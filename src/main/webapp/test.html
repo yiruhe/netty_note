@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form >
+    <textarea name="msg" id="msg" cols="30" rows="10"></textarea>
+    <input type="button" value="发送数据" onclick="send(this.form.msg.value)" />
+
+    <textarea name="res" id="res" cols="30" rows="10"></textarea>
+    <input type="button" value="清空" />
+</form>
+
+<script>
+
+   var socket = new WebSocket("ws://localhost:8899/ws");
+
+   socket.onmessage = function(e){
+       var msg = document.getElementById("res");
+       msg.value= e.data;
+
+   }
+
+   socket.onopen = function (ev) {
+
+       console.log("连接建立!");
+   }
+
+   function send(msg) {
+
+       if(socket.readyState == WebSocket.OPEN){
+
+           socket.send(msg);
+       }
+   }
+
+</script>
+
+</body>
+</html>
